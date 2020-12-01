@@ -29,6 +29,11 @@ define([
             },
 
             onSuccess: function(data) {
+                if (data.payment_processor == 'alipay') {
+                    window.location.href=data.payment_page_url;
+                    return;
+                };
+
                 var $form = $('<form>', {
                     class: 'hidden',
                     action: data.payment_page_url,
