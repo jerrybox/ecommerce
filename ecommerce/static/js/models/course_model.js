@@ -115,7 +115,7 @@ define([
              */
             validCourseTypeSeatMapping: {
                 audit: ['audit', 'honor'],
-                verified: ['audit', 'verified', 'honor'],
+                verified: ['verified', 'honor'],
                 professional: ['professional'],
                 credit: ['audit', 'verified', 'credit', 'honor']
             },
@@ -125,7 +125,7 @@ define([
              */
             activeCourseTypeSeatMapping: {
                 audit: ['audit'],
-                verified: ['audit', 'verified'],
+                verified: ['verified'],
                 professional: ['professional'],
                 credit: ['audit', 'verified', 'credit']
             },

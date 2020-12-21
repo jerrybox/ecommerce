@@ -2,8 +2,6 @@
 import datetime
 import logging
 import random
-import json
-import threading
 from pytz import UTC
 
 from decimal import Decimal
