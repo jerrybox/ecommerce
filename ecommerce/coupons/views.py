@@ -319,7 +319,7 @@ class EnrollmentCodeCsvView(View):
 
         order_line_vouchers = OrderLineVouchers.objects.filter(line__order=order)
         for order_line_voucher in order_line_vouchers:
-            writer.writerow([order_line_voucher.line.product.title])
+            writer.writerow([order_line_voucher.line.product.title.encode('utf-8')])
             voucher_writer.writeheader()
 
             for voucher in order_line_voucher.vouchers.all():
