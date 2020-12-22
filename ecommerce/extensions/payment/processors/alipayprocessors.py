@@ -49,7 +49,7 @@ class AliPay(BasePaymentProcessor):
         alipay_model = AlipayTradePagePayModel()
         alipay_model.out_trade_no = trade_id
         alipay_model.total_amount = total_amount
-        alipay_model.product_code = b"FAST_INSTANT_TRADE_PAY"
+        alipay_model.product_code = "FAST_INSTANT_TRADE_PAY"
         alipay_model.subject = subject
         alipay_model.body = body
 
@@ -58,9 +58,9 @@ class AliPay(BasePaymentProcessor):
         alipay_request.return_url = str(urljoin(get_ecommerce_url(), reverse('alipay:return')))
         pay_url = self.alipay_client.page_execute(alipay_request, http_method="GET")
 
-        parameters = alipay_model.to_alipay_dict()
-        parameters['payment_page_url'] = pay_url
-
+        parameters = {
+            'payment_page_url': pay_url,
+        }
         return parameters
 
     @property
@@ -94,10 +94,10 @@ class AliPay(BasePaymentProcessor):
         trade_id = self.create_trade_id(basket.id)
         try:
             course_data = get_course_info_from_catalog(request.site, basket.all_lines()[0].product)
-            subject = body = course_data.get('title')
+            subject = body = course_data.get('title').encode('utf-8')
         except Exception, e:
             logger.exception(e)
-            subject = body = b'buy course'
+            subject = body = 'buy course'
         total_amount = self.str_to_specify_digits(str(basket.total_incl_tax))
 
         parameters = self.get_parameters(trade_id, body, subject, total_amount)
@@ -110,7 +110,7 @@ class AliPay(BasePaymentProcessor):
         sign = response.pop("sign", None)
         response.pop('sign_type')
         response_dict = sorted(response.items(), key=lambda x: x[0], reverse=False)
-        message = "&".join(u"{}={}".format(k, v) for k, v in response_dict).encode()
+        message = u"&".join(u"{}={}".format(k, v) for k, v in response_dict).encode('utf-8')
         try:
             verify_res = verify_with_rsa(self.alipay_conf.alipay_public_key, message, sign)
         except Exception as e:
